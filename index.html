@@ -969,8 +969,69 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => { if(e.target === bg) bg.classList.remove('show'); });
 });
 
+// iOS SHORTCUT URL SCHEME
+// Reads ?sms= parameter from URL and auto-opens the parse modal
+// Used with iPhone Shortcuts automation to pass bank SMS text directly into the app
+function checkURLParams() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const smsText = params.get('sms');
+    if (smsText && smsText.trim()) {
+      // Pre-fill the SMS textarea and open the paste modal automatically
+      document.getElementById('sms-text').value = decodeURIComponent(smsText);
+      document.getElementById('paste-modal').classList.add('show');
+      notify('📩 SMS received from Shortcut');
+      // Clean the URL so refreshing doesn't re-trigger
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  } catch(e) {
+    // Silently ignore if URL parsing fails
+  }
+}
+
+// SWIPE GESTURE NAVIGATION
+(function() {
+  const TABS = ['home', 'history', 'cats', 'cards'];
+  let txS = 0, tyS = 0, valid = false;
+
+  function curIdx() {
+    return Array.from(document.querySelectorAll('.tab')).indexOf(document.querySelector('.tab.active'));
+  }
+
+  const area = document.querySelector('.content');
+
+  area.addEventListener('touchstart', function(e) {
+    // Ignore if a modal is open
+    if(document.querySelector('.modal-bg.show')) return;
+    txS = e.touches[0].clientX;
+    tyS = e.touches[0].clientY;
+    valid = true;
+  }, { passive: true });
+
+  area.addEventListener('touchmove', function(e) {
+    if(!valid) return;
+    const dx = Math.abs(e.touches[0].clientX - txS);
+    const dy = Math.abs(e.touches[0].clientY - tyS);
+    // If user is clearly scrolling vertically, cancel swipe tracking
+    if(dy > dx && dy > 10) valid = false;
+  }, { passive: true });
+
+  area.addEventListener('touchend', function(e) {
+    if(!valid) return;
+    valid = false;
+    const dx = e.changedTouches[0].clientX - txS;
+    const dy = e.changedTouches[0].clientY - tyS;
+    // Must be mostly horizontal and at least 50px
+    if(Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
+    const i = curIdx();
+    if(dx < 0 && i < TABS.length - 1) switchTab(TABS[i + 1]);
+    if(dx > 0 && i > 0) switchTab(TABS[i - 1]);
+  }, { passive: true });
+})();
+
 // Init
 renderHome();
+checkURLParams();
 </script>
 </body>
 </html>
