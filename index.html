@@ -969,8 +969,62 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => { if(e.target === bg) bg.classList.remove('show'); });
 });
 
+// iOS SHORTCUT URL SCHEME
+// Reads ?sms= parameter from URL and auto-opens the parse modal
+// Used with iPhone Shortcuts automation to pass bank SMS text directly into the app
+function checkURLParams() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const smsText = params.get('sms');
+    if (smsText && smsText.trim()) {
+      // Pre-fill the SMS textarea and open the paste modal automatically
+      document.getElementById('sms-text').value = decodeURIComponent(smsText);
+      document.getElementById('paste-modal').classList.add('show');
+      notify('📩 SMS received from Shortcut');
+      // Clean the URL so refreshing doesn't re-trigger
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  } catch(e) {
+    // Silently ignore if URL parsing fails
+  }
+}
+
+// SWIPE GESTURE NAVIGATION
+// Swipe left = next tab, swipe right = previous tab
+// Ignores swipes inside modals or horizontal filter rows
+(function() {
+  const TABS = ['home', 'history', 'cats', 'cards'];
+  let txS = 0, tyS = 0, ttS = 0;
+
+  function curIdx() {
+    return Array.from(document.querySelectorAll('.tab')).indexOf(document.querySelector('.tab.active'));
+  }
+  function inModal(el) { return !!el.closest('.modal-bg'); }
+  function inFilter(el) { return !!el.closest('.filter-row'); }
+
+  document.addEventListener('touchstart', function(e) {
+    if(inModal(e.target) || inFilter(e.target)) return;
+    txS = e.touches[0].clientX;
+    tyS = e.touches[0].clientY;
+    ttS = Date.now();
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if(inModal(e.target) || inFilter(e.target)) return;
+    const dx = e.changedTouches[0].clientX - txS;
+    const dy = e.changedTouches[0].clientY - tyS;
+    const dt = Date.now() - ttS;
+    // Validate: horizontal, long enough, fast enough
+    if(Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 1.8 || dt > 420) return;
+    const i = curIdx();
+    if(dx < 0 && i < TABS.length - 1) switchTab(TABS[i + 1]); // swipe left = next
+    if(dx > 0 && i > 0) switchTab(TABS[i - 1]);               // swipe right = prev
+  }, { passive: true });
+})();
+
 // Init
 renderHome();
+checkURLParams();
 </script>
 </body>
 </html>
