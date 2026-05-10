@@ -35,8 +35,14 @@
   
   /* NAV */
   .nav-bar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; z-index: 100; background: rgba(15,15,19,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 52px 20px 0; }
-  .nav-title { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; padding-bottom: 14px; }
-  .nav-title span { color: var(--accent); }
+  .nav-title { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; padding-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-title-text span { color: var(--accent); }
+  .sync-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text3); font-weight: 400; }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); flex-shrink: 0; transition: background 0.3s; }
+  .sync-dot.syncing { background: var(--amber); animation: pulse 1s infinite; }
+  .sync-dot.ok { background: var(--green); }
+  .sync-dot.err { background: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
   .tabs { display: flex; gap: 4px; padding-bottom: 0; }
   .tab { flex: 1; padding: 10px 4px; text-align: center; font-size: 12px; font-weight: 500; color: var(--text3); border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px; }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -109,10 +115,17 @@
   .btn-primary { width: calc(100% - 40px); margin: 0 20px; background: var(--accent); color: white; border: none; border-radius: var(--radius); padding: 15px; font-size: 16px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.2s; }
   .btn-primary:active { opacity: 0.85; }
   .btn-danger { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  .btn-secondary { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
 
   /* PASTE MODAL */
   .paste-area { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; font-size: 13px; color: var(--text2); line-height: 1.6; min-height: 120px; width: 100%; font-family: 'DM Sans', sans-serif; outline: none; resize: none; }
   .paste-area:focus { border-color: var(--accent); color: var(--text); }
+
+  /* CC AUTO-DETECT BANNER */
+  .cc-detect-banner { margin: 0 20px 14px; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+  .cc-detect-banner-icon { font-size: 18px; flex-shrink: 0; }
+  .cc-detect-banner-text { font-size: 12px; color: var(--blue); line-height: 1.5; }
+  .cc-detect-banner-text strong { font-weight: 600; }
 
   /* CATEGORIES PAGE */
   .cat-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
@@ -170,6 +183,27 @@
   .filter-row::-webkit-scrollbar { display: none; }
   .filter-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.15s; flex-shrink: 0; }
   .filter-chip.active { background: rgba(124,111,247,0.15); border-color: var(--accent); color: var(--accent); }
+
+  /* SETTINGS PAGE */
+  .settings-section { margin-bottom: 24px; }
+  .settings-section-title { font-size: 11px; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; padding: 0 2px; margin-bottom: 10px; }
+  .settings-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+  .settings-row-icon { font-size: 20px; width: 36px; text-align: center; flex-shrink: 0; }
+  .settings-row-info { flex: 1; min-width: 0; }
+  .settings-row-label { font-size: 14px; font-weight: 500; }
+  .settings-row-sub { font-size: 12px; color: var(--text3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .settings-row-action { font-size: 12px; color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .settings-input-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; }
+  .settings-input-label { font-size: 11px; color: var(--text3); letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 8px; }
+  .settings-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 14px; color: var(--text); font-family: 'DM Mono', monospace; outline: none; transition: border 0.2s; }
+  .settings-input:focus { border-color: var(--accent); }
+  .settings-input.masked { font-size: 13px; letter-spacing: 2px; }
+  .sync-history-item { font-size: 12px; color: var(--text3); padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .sync-history-item:last-child { border-bottom: none; }
+  .sync-ok { color: var(--green); }
+  .sync-fail { color: var(--red); }
+  .save-settings-btn { width: 100%; background: var(--accent); color: white; border: none; border-radius: var(--radius); padding: 14px; font-size: 15px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-bottom: 10px; }
+  .test-sync-btn { width: 100%; background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 12px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -177,12 +211,19 @@
 <div class="notif" id="notif">✓ Saved</div>
 
 <div class="nav-bar">
-  <div class="nav-title">Spend<span>Sense</span></div>
+  <div class="nav-title">
+    <div class="nav-title-text">Spend<span>Sense</span></div>
+    <div class="sync-status" id="sync-status-indicator" onclick="switchTab('settings')" style="cursor:pointer">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-label">–</span>
+    </div>
+  </div>
   <div class="tabs">
     <div class="tab active" onclick="switchTab('home')">Today</div>
     <div class="tab" onclick="switchTab('history')">History</div>
     <div class="tab" onclick="switchTab('cats')">Categories</div>
     <div class="tab" onclick="switchTab('cards')">Cards</div>
+    <div class="tab" onclick="switchTab('settings')">⚙️</div>
   </div>
 </div>
 
@@ -266,6 +307,77 @@
     <div id="cc-txn-list"></div>
   </div>
 
+  <!-- SETTINGS TAB -->
+  <div class="page" id="page-settings">
+    <div class="settings-section">
+      <div class="settings-section-title">GitHub Sync</div>
+
+      <div class="settings-input-row">
+        <div class="settings-input-label">GitHub Personal Access Token</div>
+        <input class="settings-input masked" id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" />
+        <div style="font-size:11px; color:var(--text3); margin-top:6px">Needs <code style="color:var(--accent)">repo</code> or <code style="color:var(--accent)">contents:write</code> scope. Stored locally on device only.</div>
+      </div>
+
+      <div class="settings-input-row">
+        <div class="settings-input-label">Repository (owner/repo)</div>
+        <input class="settings-input" id="gh-repo" type="text" placeholder="yourname/spendsense-data" spellcheck="false" />
+      </div>
+
+      <div class="settings-input-row">
+        <div class="settings-input-label">File path in repo</div>
+        <input class="settings-input" id="gh-path" type="text" placeholder="data/expenses.json" spellcheck="false" />
+        <div style="font-size:11px; color:var(--text3); margin-top:6px">The file will be created if it doesn't exist.</div>
+      </div>
+
+      <div class="settings-input-row">
+        <div class="settings-input-label">Branch</div>
+        <input class="settings-input" id="gh-branch" type="text" placeholder="main" spellcheck="false" />
+      </div>
+
+      <button class="save-settings-btn" onclick="saveGitHubSettings()">💾 Save Settings</button>
+      <button class="test-sync-btn" onclick="testSync()">🔄 Test Sync Now</button>
+    </div>
+
+    <div class="settings-section" id="sync-history-section" style="display:none">
+      <div class="settings-section-title">Sync History</div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px;">
+        <div id="sync-history-list"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Data</div>
+      <div class="settings-row" onclick="exportAllJSON()" style="cursor:pointer">
+        <div class="settings-row-icon">📦</div>
+        <div class="settings-row-info">
+          <div class="settings-row-label">Export all data as JSON</div>
+          <div class="settings-row-sub">Full backup of all transactions</div>
+        </div>
+        <div class="settings-row-action">Export →</div>
+      </div>
+      <div class="settings-row" onclick="triggerImportJSON()" style="cursor:pointer">
+        <div class="settings-row-icon">📥</div>
+        <div class="settings-row-info">
+          <div class="settings-row-label">Import JSON backup</div>
+          <div class="settings-row-sub">Restore from a previous export</div>
+        </div>
+        <div class="settings-row-action">Import →</div>
+      </div>
+      <input type="file" id="json-import-input" accept=".json" style="display:none" onchange="importJSON(event)" />
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">About</div>
+      <div class="settings-row">
+        <div class="settings-row-icon">💸</div>
+        <div class="settings-row-info">
+          <div class="settings-row-label">SpendSense</div>
+          <div class="settings-row-sub">Version 2.1 · Built for iOS PWA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- FAB -->
@@ -279,6 +391,12 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="add-modal-title">Add Expense</div>
+
+    <!-- CC auto-detect banner (shown when SMS parsing detects a bank) -->
+    <div class="cc-detect-banner" id="cc-detect-banner" style="display:none">
+      <div class="cc-detect-banner-icon">💳</div>
+      <div class="cc-detect-banner-text" id="cc-detect-banner-text">INR transaction detected — credit card pre-selected.</div>
+    </div>
 
     <div class="form-group">
       <div class="form-label">Description</div>
@@ -373,7 +491,7 @@
     </div>
     <div style="padding: 0 20px; margin-bottom: 14px;">
       <div style="font-size: 11px; color: var(--text3); line-height: 1.6;">
-        SpendSense reads your SMS and extracts the amount, merchant and transaction type automatically. On iPhone: copy the message, tap above and paste (long press → Paste).
+        SpendSense reads your SMS and extracts the amount, merchant and transaction type automatically. If INR is detected, credit card is pre-selected with the matching bank. On iPhone: copy the message, tap above and paste (long press → Paste).
       </div>
     </div>
     <button class="btn-primary" onclick="parseSMS()">Parse & Add</button>
@@ -440,21 +558,143 @@ let historyMonth = new Date();
 let catMonth = new Date();
 let cardMonth = new Date();
 
-// Save DB
-function saveDB() { localStorage.setItem('spendsense_v2', JSON.stringify(DB)); }
+// ─── GITHUB SYNC SETTINGS ─────────────────────────────────────────────────────
 
-// Unique ID
+let GH = JSON.parse(localStorage.getItem('spendsense_gh') || '{"token":"","repo":"","path":"data/expenses.json","branch":"main"}');
+let syncLog = JSON.parse(localStorage.getItem('spendsense_synclog') || '[]'); // [{ts, ok, msg}]
+
+function saveGHSettings() {
+  localStorage.setItem('spendsense_gh', JSON.stringify(GH));
+}
+
+function addSyncLog(ok, msg) {
+  syncLog.unshift({ ts: new Date().toISOString(), ok, msg });
+  if(syncLog.length > 20) syncLog = syncLog.slice(0, 20);
+  localStorage.setItem('spendsense_synclog', JSON.stringify(syncLog));
+  updateSyncUI();
+}
+
+function updateSyncUI(state) {
+  // state: 'syncing' | 'ok' | 'err' | null (derive from log)
+  const dot = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-label');
+  if(!dot) return;
+
+  if(state === 'syncing') {
+    dot.className = 'sync-dot syncing';
+    label.textContent = 'Syncing…';
+    return;
+  }
+
+  if(!GH.token || !GH.repo) {
+    dot.className = 'sync-dot';
+    label.textContent = 'No sync';
+    return;
+  }
+
+  const last = syncLog[0];
+  if(!last) { dot.className = 'sync-dot'; label.textContent = 'Not synced'; return; }
+  if(last.ok) {
+    dot.className = 'sync-dot ok';
+    const ago = timeSince(new Date(last.ts));
+    label.textContent = `Synced ${ago}`;
+  } else {
+    dot.className = 'sync-dot err';
+    label.textContent = 'Sync failed';
+  }
+}
+
+function timeSince(date) {
+  const secs = Math.floor((new Date() - date) / 1000);
+  if(secs < 60) return 'just now';
+  if(secs < 3600) return Math.floor(secs/60) + 'm ago';
+  if(secs < 86400) return Math.floor(secs/3600) + 'h ago';
+  return Math.floor(secs/86400) + 'd ago';
+}
+
+// Core sync function — pushes DB to GitHub as JSON
+async function syncToGitHub(silent) {
+  if(!GH.token || !GH.repo || !GH.path) {
+    if(!silent) notify('⚙️ Set up GitHub sync in Settings first');
+    return;
+  }
+
+  updateSyncUI('syncing');
+
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(DB, null, 2))));
+  const apiBase = `https://api.github.com/repos/${GH.repo}/contents/${GH.path}`;
+  const headers = {
+    'Authorization': `token ${GH.token}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    // Get current SHA (needed to update existing file)
+    let sha = null;
+    try {
+      const getRes = await fetch(`${apiBase}?ref=${GH.branch || 'main'}`, { headers });
+      if(getRes.ok) {
+        const getData = await getRes.json();
+        sha = getData.sha;
+      }
+    } catch(_) {}
+
+    const body = {
+      message: `SpendSense sync — ${new Date().toLocaleString('en-IN')}`,
+      content,
+      branch: GH.branch || 'main',
+    };
+    if(sha) body.sha = sha;
+
+    const putRes = await fetch(apiBase, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    if(putRes.ok) {
+      addSyncLog(true, 'Synced successfully');
+      if(!silent) notify('✅ Synced to GitHub!');
+    } else {
+      const err = await putRes.json();
+      const msg = err.message || putRes.statusText;
+      addSyncLog(false, msg);
+      if(!silent) notify('❌ Sync failed: ' + msg);
+    }
+  } catch(e) {
+    addSyncLog(false, e.message || 'Network error');
+    if(!silent) notify('❌ Sync error: ' + (e.message || 'Network error'));
+  }
+
+  updateSyncUI();
+}
+
+// Debounced auto-sync after every save
+let syncTimer = null;
+function scheduleSync() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncToGitHub(true), 1500);
+}
+
+// ─── SAVE DB ──────────────────────────────────────────────────────────────────
+
+function saveDB() {
+  localStorage.setItem('spendsense_v2', JSON.stringify(DB));
+  scheduleSync();
+}
+
+// ─── UTILITIES ────────────────────────────────────────────────────────────────
+
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
-// Notification
 function notify(msg) {
   const n = document.getElementById('notif');
   n.textContent = msg;
   n.classList.add('show');
-  setTimeout(() => n.classList.remove('show'), 2000);
+  setTimeout(() => n.classList.remove('show'), 2500);
 }
 
-// Today's date string
 function todayStr() { return new Date().toISOString().slice(0,10); }
 function formatDate(iso) {
   const d = new Date(iso);
@@ -466,23 +706,24 @@ function formatTime(iso) {
 }
 function formatMoney(n) { return '₹' + Number(n).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
-// Tabs
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+
 function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    const tabs = ['home','history','cats','cards'];
-    t.classList.toggle('active', tabs[i] === tab);
-  });
+  const tabNames = ['home','history','cats','cards','settings'];
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tabNames[i] === tab));
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + tab).classList.add('active');
   if(tab === 'home') renderHome();
   if(tab === 'history') renderHistory();
   if(tab === 'cats') renderCats();
   if(tab === 'cards') renderCards();
+  if(tab === 'settings') renderSettings();
 }
 
-// Get txns for a date
+// ─── DATA HELPERS ────────────────────────────────────────────────────────────
+
 function getTodayTxns() {
-  const today = DB.reset_date === todayStr() ? todayStr() : todayStr();
+  const today = todayStr();
   const resetTs = DB.reset_ts || 0;
   return DB.txns.filter(t => t.date === today && new Date(t.datetime).getTime() >= resetTs);
 }
@@ -491,7 +732,8 @@ function getMonthTxns(dateObj) {
   return DB.txns.filter(t => { const d = new Date(t.datetime); return d.getFullYear()===y && d.getMonth()===m; });
 }
 
-// Render HOME
+// ─── RENDER HOME ──────────────────────────────────────────────────────────────
+
 function renderHome() {
   const txns = getTodayTxns().sort((a,b) => new Date(b.datetime)-new Date(a.datetime));
   const debits = txns.filter(t => t.txn_type !== 'credit');
@@ -499,22 +741,18 @@ function renderHome() {
   document.getElementById('today-total').textContent = total.toLocaleString('en-IN', {minimumFractionDigits:2});
   document.getElementById('today-count').textContent = txns.length;
 
-  // Top cat
   const catAmts = {};
   debits.forEach(t => { catAmts[t.category] = (catAmts[t.category]||0) + Number(t.amount); });
   const topCat = Object.entries(catAmts).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById('today-top-cat').textContent = topCat ? (CAT_MAP[topCat[0]]?.icon + ' ' + CAT_MAP[topCat[0]]?.name) : '—';
 
-  // Month total
   const mTotal = getMonthTxns(new Date()).filter(t=>t.txn_type!=='credit').reduce((s,t)=>s+Number(t.amount),0);
   document.getElementById('month-total').textContent = '₹' + mTotal.toLocaleString('en-IN', {maximumFractionDigits:0});
 
-  // Cat bar
   const track = document.getElementById('cat-bar-track');
   track.innerHTML = '';
   if(total > 0) {
-    const sorted = Object.entries(catAmts).sort((a,b)=>b[1]-a[1]);
-    sorted.forEach(([catId, amt]) => {
+    Object.entries(catAmts).sort((a,b)=>b[1]-a[1]).forEach(([catId, amt]) => {
       const seg = document.createElement('div');
       seg.className = 'cat-bar-seg';
       seg.style.width = ((amt/total)*100).toFixed(1) + '%';
@@ -523,11 +761,9 @@ function renderHome() {
     });
   }
 
-  // Today label
   const now = new Date();
   document.getElementById('today-label').textContent = now.toLocaleDateString('en-IN', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
 
-  // List
   const list = document.getElementById('today-list');
   if(txns.length === 0) {
     list.innerHTML = '<div class="empty"><div class="empty-icon">💸</div><p>No expenses today.<br>Tap + to add or paste an SMS.</p></div>';
@@ -557,26 +793,19 @@ function txnHTML(t) {
   </div>`;
 }
 
-// Toggle datetime
-function toggleDatetime(id, event) {
-  event.stopPropagation();
-  const el = document.getElementById('dt-' + id);
-  if(el) el.classList.toggle('show');
-}
+// ─── RENDER HISTORY ───────────────────────────────────────────────────────────
 
-// Render HISTORY
 function renderHistory() {
   const label = historyMonth.toLocaleDateString('en-IN', {month:'long', year:'numeric'});
   document.getElementById('history-month-label').textContent = label;
   
   let txns = getMonthTxns(historyMonth).sort((a,b) => new Date(b.datetime)-new Date(a.datetime));
   
-  // Filter chips
   const filterEl = document.getElementById('history-filters');
   const allChips = ['All', ...CATS.map(c => c.icon + ' ' + c.name)];
   const activeFilter = filterEl.dataset.active || 'All';
-  filterEl.innerHTML = allChips.map(label => 
-    `<div class="filter-chip ${label===activeFilter?'active':''}" onclick="setHistoryFilter('${label}')">${label}</div>`
+  filterEl.innerHTML = allChips.map(l => 
+    `<div class="filter-chip ${l===activeFilter?'active':''}" onclick="setHistoryFilter('${l}')">${l}</div>`
   ).join('');
   filterEl.dataset.active = activeFilter;
   
@@ -585,7 +814,6 @@ function renderHistory() {
     txns = txns.filter(t => (CAT_MAP[t.category]?.name || 'Other') === catName);
   }
 
-  // Group by date
   const groups = {};
   txns.forEach(t => { (groups[t.date] = groups[t.date]||[]).push(t); });
   
@@ -605,10 +833,10 @@ function setHistoryFilter(label) {
   document.getElementById('history-filters').dataset.active = label;
   renderHistory();
 }
-
 function changeMonth(d) { historyMonth.setMonth(historyMonth.getMonth()+d); renderHistory(); }
 
-// Render CATS
+// ─── RENDER CATS ─────────────────────────────────────────────────────────────
+
 function renderCats() {
   const label = catMonth.toLocaleDateString('en-IN', {month:'long', year:'numeric'});
   document.getElementById('cat-month-label').textContent = label;
@@ -628,12 +856,12 @@ function renderCats() {
     </div>`).join('');
   }
   
-  const catList = document.getElementById('cat-txn-list');
-  catList.innerHTML = txns.sort((a,b)=>new Date(b.datetime)-new Date(a.datetime)).map(t => txnHTML(t)).join('');
+  document.getElementById('cat-txn-list').innerHTML = txns.sort((a,b)=>new Date(b.datetime)-new Date(a.datetime)).map(t => txnHTML(t)).join('');
 }
 function changeCatMonth(d) { catMonth.setMonth(catMonth.getMonth()+d); renderCats(); }
 
-// Render CARDS
+// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
+
 function renderCards() {
   const label = cardMonth.toLocaleDateString('en-IN', {month:'long', year:'numeric'});
   document.getElementById('card-month-label').textContent = label;
@@ -657,14 +885,8 @@ function renderCards() {
         <div class="cc-total">${formatMoney(cardAmts[c.id]||0)}</div>
         <div class="cc-sub">${(txns.filter(t=>(t.card||'other')===c.id).length)} transactions this month</div>
         <div class="cc-meta">
-          <div class="cc-meta-item">
-            <div class="cc-meta-label">One-time</div>
-            <div class="cc-meta-val">${formatMoney(cardOne[c.id]||0)}</div>
-          </div>
-          <div class="cc-meta-item">
-            <div class="cc-meta-label">EMI total</div>
-            <div class="cc-meta-val">${formatMoney(cardEmi[c.id]||0)}</div>
-          </div>
+          <div class="cc-meta-item"><div class="cc-meta-label">One-time</div><div class="cc-meta-val">${formatMoney(cardOne[c.id]||0)}</div></div>
+          <div class="cc-meta-item"><div class="cc-meta-label">EMI total</div><div class="cc-meta-val">${formatMoney(cardEmi[c.id]||0)}</div></div>
         </div>
       </div>`).join('');
   }
@@ -688,7 +910,46 @@ function renderCards() {
 }
 function changeCardMonth(d) { cardMonth.setMonth(cardMonth.getMonth()+d); renderCards(); }
 
-// MODAL
+// ─── RENDER SETTINGS ──────────────────────────────────────────────────────────
+
+function renderSettings() {
+  document.getElementById('gh-token').value = GH.token || '';
+  document.getElementById('gh-repo').value = GH.repo || '';
+  document.getElementById('gh-path').value = GH.path || 'data/expenses.json';
+  document.getElementById('gh-branch').value = GH.branch || 'main';
+
+  const histSection = document.getElementById('sync-history-section');
+  const histList = document.getElementById('sync-history-list');
+  if(syncLog.length > 0) {
+    histSection.style.display = 'block';
+    histList.innerHTML = syncLog.slice(0,8).map(s => `
+      <div class="sync-history-item">
+        <span>${new Date(s.ts).toLocaleString('en-IN', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span>
+        <span class="${s.ok?'sync-ok':'sync-fail'}">${s.ok ? '✓ ' + s.msg : '✗ ' + s.msg}</span>
+      </div>`).join('');
+  } else {
+    histSection.style.display = 'none';
+  }
+}
+
+function saveGitHubSettings() {
+  GH.token = document.getElementById('gh-token').value.trim();
+  GH.repo = document.getElementById('gh-repo').value.trim();
+  GH.path = document.getElementById('gh-path').value.trim() || 'data/expenses.json';
+  GH.branch = document.getElementById('gh-branch').value.trim() || 'main';
+  saveGHSettings();
+  notify('⚙️ Settings saved!');
+  updateSyncUI();
+}
+
+async function testSync() {
+  saveGitHubSettings();
+  await syncToGitHub(false);
+  renderSettings();
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+
 function openAddModal() {
   currentEditId = null;
   selectedCat = 'food';
@@ -703,6 +964,7 @@ function openAddModal() {
   document.getElementById('f-notes').value = '';
   document.getElementById('f-datetime').value = new Date().toISOString().slice(0,16);
   document.getElementById('del-btn').style.display = 'none';
+  document.getElementById('cc-detect-banner').style.display = 'none';
   toggleCCFields();
   buildCatPicker();
   document.getElementById('add-modal').classList.add('show');
@@ -724,6 +986,7 @@ function openEditModal(id) {
   document.getElementById('f-notes').value = t.notes || '';
   document.getElementById('f-datetime').value = new Date(t.datetime).toISOString().slice(0,16);
   document.getElementById('del-btn').style.display = 'block';
+  document.getElementById('cc-detect-banner').style.display = 'none';
   toggleCCFields();
   buildCatPicker();
   document.getElementById('add-modal').classList.add('show');
@@ -750,9 +1013,8 @@ function buildCatPicker() {
 
 function selectCat(id) {
   selectedCat = id;
-  document.querySelectorAll('.cat-pick').forEach(el => el.classList.remove('sel'));
   document.querySelectorAll('.cat-pick').forEach(el => {
-    if(el.querySelector('.cat-pick-name').textContent === (CAT_MAP[id]?.name)) el.classList.add('sel');
+    el.classList.toggle('sel', el.querySelector('.cat-pick-name').textContent === (CAT_MAP[id]?.name));
   });
 }
 
@@ -784,27 +1046,47 @@ function saveTransaction() {
   } else {
     DB.txns.push(txn);
   }
-  saveDB();
+  saveDB(); // triggers auto-sync
   closeModal('add-modal');
   notify(currentEditId ? '✏️ Updated!' : '✓ Saved!');
   
   const activeTab = document.querySelector('.tab.active');
   const tabIdx = [...document.querySelectorAll('.tab')].indexOf(activeTab);
-  const tabs = ['home','history','cats','cards'];
-  const renderers = [renderHome, renderHistory, renderCats, renderCards];
-  renderers[tabIdx]();
+  const renderers = [renderHome, renderHistory, renderCats, renderCards, renderSettings];
+  if(renderers[tabIdx]) renderers[tabIdx]();
 }
 
 function deleteCurrentTxn() {
   if(!currentEditId) return;
   DB.txns = DB.txns.filter(t => t.id !== currentEditId);
-  saveDB();
+  saveDB(); // triggers auto-sync
   closeModal('add-modal');
   notify('🗑 Deleted');
   renderHome();
 }
 
-// PARSE SMS
+// ─── PARSE SMS ────────────────────────────────────────────────────────────────
+// Bank detection: maps keywords → card ID
+const BANK_PATTERNS = [
+  { id: 'kotak',   pattern: /kotak/i },
+  { id: 'icici',   pattern: /icici/i },
+  { id: 'axis',    pattern: /axis\s*bank|axisbank/i },
+  { id: 'lazypay', pattern: /lazypay|lazy\s*pay/i },
+];
+
+// Detect INR in message — returns true for explicit INR keyword or ₹ symbol
+function hasINR(text) {
+  return /\bINR\b|₹/.test(text);
+}
+
+// Detect which bank is mentioned, returns card id or null
+function detectBank(text) {
+  for(const b of BANK_PATTERNS) {
+    if(b.pattern.test(text)) return b.id;
+  }
+  return null;
+}
+
 function openPasteModal() {
   document.getElementById('sms-text').value = '';
   document.getElementById('paste-modal').classList.add('show');
@@ -840,7 +1122,6 @@ function parseSMS() {
     if(m) { desc = m[1].trim(); break; }
   }
   if(!desc) {
-    // Fallback: get a reasonable substring
     const cleaned = text.replace(/[^a-zA-Z0-9\s]/g,'').split(/\s+/).slice(3,8).join(' ');
     desc = cleaned || 'SMS Transaction';
   }
@@ -857,16 +1138,51 @@ function parseSMS() {
   else if(/electricity|airtel|jio|bsnl|water|gas|bill|recharge/.test(lower)) cat = 'bills';
   else if(/netflix|prime|hotstar|spotify|youtube|movie|cinema/.test(lower)) cat = 'entertainment';
   else if(/salary|payroll|credited by/.test(lower)) cat = 'salary';
-  
-  // Detect CC
+
+  // ── NEW: INR + bank detection logic ──────────────────────────────────────
+  // If INR is found in the message, default to credit card.
+  // Also check for known bank names and pre-select the right card.
   let method = 'upi';
   let card = 'other';
-  if(/credit card|cc |kotak/i.test(text)) { method = 'credit_card'; card = /kotak/i.test(text) ? 'kotak' : 'other'; }
-  else if(/icici/i.test(text)) { method = 'credit_card'; card = 'icici'; }
-  else if(/axis/i.test(text)) { method = 'credit_card'; card = 'axis'; }
-  else if(/lazypay/i.test(text)) { method = 'credit_card'; card = 'lazypay'; }
-  else if(/debit card/i.test(text)) method = 'debit_card';
-  else if(/net banking|netbanking/i.test(text)) method = 'netbanking';
+  let ccDetected = false;
+  let ccDetectMsg = '';
+
+  const inrFound = hasINR(text);
+  const bankFound = detectBank(text);
+
+  if(inrFound) {
+    // INR detected → force credit card
+    method = 'credit_card';
+    ccDetected = true;
+    if(bankFound) {
+      card = bankFound;
+      const cardName = CARD_MAP[bankFound]?.name || bankFound;
+      ccDetectMsg = `INR transaction detected — <strong>${cardName}</strong> credit card pre-selected. Confirm or change below.`;
+    } else {
+      // INR but no known bank found — still default to CC, let user pick card
+      card = 'other';
+      ccDetectMsg = `INR transaction detected — credit card pre-selected. Please select your card below.`;
+    }
+  } else {
+    // No INR — fall back to previous heuristics
+    if(/credit card|cc /i.test(text)) {
+      method = 'credit_card';
+      if(bankFound) card = bankFound;
+    } else if(bankFound) {
+      // Bank name found but no INR — still check if it's a CC context
+      if(/credit|cc|card/i.test(text)) {
+        method = 'credit_card';
+        card = bankFound;
+        ccDetected = true;
+        ccDetectMsg = `${CARD_MAP[bankFound]?.name} credit card detected.`;
+      }
+    } else if(/debit card/i.test(text)) {
+      method = 'debit_card';
+    } else if(/net banking|netbanking/i.test(text)) {
+      method = 'netbanking';
+    }
+  }
+  // ── end detection ─────────────────────────────────────────────────────────
   
   closeModal('paste-modal');
   
@@ -890,12 +1206,24 @@ function parseSMS() {
   document.getElementById('f-notes').value = '';
   document.getElementById('f-datetime').value = new Date().toISOString().slice(0,16);
   document.getElementById('del-btn').style.display = 'none';
+
+  // Show / hide CC detect banner
+  const banner = document.getElementById('cc-detect-banner');
+  const bannerText = document.getElementById('cc-detect-banner-text');
+  if(ccDetected) {
+    bannerText.innerHTML = ccDetectMsg;
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+
   toggleCCFields();
   buildCatPicker();
   document.getElementById('add-modal').classList.add('show');
 }
 
-// Reset
+// ─── RESET ────────────────────────────────────────────────────────────────────
+
 function confirmReset() { document.getElementById('reset-modal').classList.add('show'); }
 function doReset() {
   DB.reset_ts = Date.now();
@@ -906,7 +1234,8 @@ function doReset() {
   renderHome();
 }
 
-// EXPORT CSV
+// ─── EXPORT CSV ──────────────────────────────────────────────────────────────
+
 function exportCSV() {
   const txns = getMonthTxns(catMonth);
   if(!txns.length) { notify('No data to export'); return; }
@@ -925,7 +1254,8 @@ function exportCSV() {
   notify('📊 CSV downloaded!');
 }
 
-// EXPORT PDF
+// ─── EXPORT PDF ──────────────────────────────────────────────────────────────
+
 function exportPDF() {
   const txns = getMonthTxns(catMonth);
   if(!txns.length) { notify('No data to export'); return; }
@@ -964,34 +1294,66 @@ function exportPDF() {
   notify('📄 Report downloaded!');
 }
 
-// Close modals on bg click
+// ─── EXPORT / IMPORT ALL JSON ─────────────────────────────────────────────────
+
+function exportAllJSON() {
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'spendsense_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  notify('📦 Backup exported!');
+}
+
+function triggerImportJSON() {
+  document.getElementById('json-import-input').click();
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if(!imported.txns || !Array.isArray(imported.txns)) { notify('❌ Invalid backup file'); return; }
+      DB = imported;
+      saveDB();
+      notify(`✅ Imported ${DB.txns.length} transactions!`);
+      renderHome();
+    } catch(err) {
+      notify('❌ Failed to parse file');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ─── CLOSE MODALS ON BG CLICK ────────────────────────────────────────────────
+
 document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => { if(e.target === bg) bg.classList.remove('show'); });
 });
 
-// iOS SHORTCUT URL SCHEME
-// Reads ?sms= parameter from URL and auto-opens the parse modal
-// Used with iPhone Shortcuts automation to pass bank SMS text directly into the app
+// ─── iOS URL SCHEME ───────────────────────────────────────────────────────────
+
 function checkURLParams() {
   try {
     const params = new URLSearchParams(window.location.search);
     const smsText = params.get('sms');
     if (smsText && smsText.trim()) {
-      // Pre-fill the SMS textarea and open the paste modal automatically
       document.getElementById('sms-text').value = decodeURIComponent(smsText);
       document.getElementById('paste-modal').classList.add('show');
       notify('📩 SMS received from Shortcut');
-      // Clean the URL so refreshing doesn't re-trigger
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  } catch(e) {
-    // Silently ignore if URL parsing fails
-  }
+  } catch(e) {}
 }
 
-// SWIPE GESTURE NAVIGATION
+// ─── SWIPE GESTURE NAVIGATION ────────────────────────────────────────────────
+
 (function() {
-  const TABS = ['home', 'history', 'cats', 'cards'];
+  const TABS = ['home', 'history', 'cats', 'cards', 'settings'];
   let txS = 0, tyS = 0, valid = false;
 
   function curIdx() {
@@ -1001,7 +1363,6 @@ function checkURLParams() {
   const area = document.querySelector('.content');
 
   area.addEventListener('touchstart', function(e) {
-    // Ignore if a modal is open
     if(document.querySelector('.modal-bg.show')) return;
     txS = e.touches[0].clientX;
     tyS = e.touches[0].clientY;
@@ -1012,7 +1373,6 @@ function checkURLParams() {
     if(!valid) return;
     const dx = Math.abs(e.touches[0].clientX - txS);
     const dy = Math.abs(e.touches[0].clientY - tyS);
-    // If user is clearly scrolling vertically, cancel swipe tracking
     if(dy > dx && dy > 10) valid = false;
   }, { passive: true });
 
@@ -1021,7 +1381,6 @@ function checkURLParams() {
     valid = false;
     const dx = e.changedTouches[0].clientX - txS;
     const dy = e.changedTouches[0].clientY - tyS;
-    // Must be mostly horizontal and at least 50px
     if(Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
     const i = curIdx();
     if(dx < 0 && i < TABS.length - 1) switchTab(TABS[i + 1]);
@@ -1029,7 +1388,9 @@ function checkURLParams() {
   }, { passive: true });
 })();
 
-// Init
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+
+updateSyncUI();
 renderHome();
 checkURLParams();
 </script>
