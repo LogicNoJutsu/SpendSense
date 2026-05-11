@@ -41,6 +41,20 @@
       "notes": "",
       "datetime": "2026-05-11T05:19:00.000Z",
       "date": "2026-05-11"
+    },
+    {
+      "id": "mp17lta6dko9",
+      "desc": "Office",
+      "amount": 50,
+      "txn_type": "debit",
+      "method": "upi",
+      "card": "kotak",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "food",
+      "notes": "",
+      "datetime": "2026-05-11T07:29:00.000Z",
+      "date": "2026-05-11"
     }
   ],
   "reset_date": ""
