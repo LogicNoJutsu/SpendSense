@@ -1,4 +1,47 @@
 {
-  "txns": [],
+  "txns": [
+    {
+      "id": "mou1za13mzn7",
+      "desc": "Blinkit",
+      "amount": 228,
+      "txn_type": "debit",
+      "method": "credit_card",
+      "card": "lazypay",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "groceries",
+      "notes": "",
+      "datetime": "2026-05-06T07:17:00.000Z",
+      "date": "2026-05-06"
+    },
+    {
+      "id": "moua67g4z7ak",
+      "desc": "Cig",
+      "amount": 100,
+      "txn_type": "debit",
+      "method": "credit_card",
+      "card": "icici",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "subscription",
+      "notes": "",
+      "datetime": "2026-05-06T05:37:00.000Z",
+      "date": "2026-05-06"
+    },
+    {
+      "id": "mp12vrifyu1e",
+      "desc": "Cug",
+      "amount": 50,
+      "txn_type": "debit",
+      "method": "upi",
+      "card": "kotak",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "other",
+      "notes": "",
+      "datetime": "2026-05-11T05:17:00.000Z",
+      "date": "2026-05-11"
+    }
+  ],
   "reset_date": ""
 }
