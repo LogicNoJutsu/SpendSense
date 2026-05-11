@@ -558,10 +558,10 @@ let historyMonth = new Date();
 let catMonth = new Date();
 let cardMonth = new Date();
 
-// ─── GITHUB SYNC SETTINGS ─────────────────────────────────────────────────────
+// ─── GITHUB SYNC ──────────────────────────────────────────────────────────────
 
 let GH = JSON.parse(localStorage.getItem('spendsense_gh') || '{"token":"","repo":"","path":"data/expenses.json","branch":"main"}');
-let syncLog = JSON.parse(localStorage.getItem('spendsense_synclog') || '[]'); // [{ts, ok, msg}]
+let syncLog = JSON.parse(localStorage.getItem('spendsense_synclog') || '[]');
 
 function saveGHSettings() {
   localStorage.setItem('spendsense_gh', JSON.stringify(GH));
@@ -575,29 +575,24 @@ function addSyncLog(ok, msg) {
 }
 
 function updateSyncUI(state) {
-  // state: 'syncing' | 'ok' | 'err' | null (derive from log)
   const dot = document.getElementById('sync-dot');
   const label = document.getElementById('sync-label');
   if(!dot) return;
-
   if(state === 'syncing') {
     dot.className = 'sync-dot syncing';
     label.textContent = 'Syncing…';
     return;
   }
-
   if(!GH.token || !GH.repo) {
     dot.className = 'sync-dot';
     label.textContent = 'No sync';
     return;
   }
-
   const last = syncLog[0];
   if(!last) { dot.className = 'sync-dot'; label.textContent = 'Not synced'; return; }
   if(last.ok) {
     dot.className = 'sync-dot ok';
-    const ago = timeSince(new Date(last.ts));
-    label.textContent = `Synced ${ago}`;
+    label.textContent = `Synced ${timeSince(new Date(last.ts))}`;
   } else {
     dot.className = 'sync-dot err';
     label.textContent = 'Sync failed';
@@ -612,34 +607,38 @@ function timeSince(date) {
   return Math.floor(secs/86400) + 'd ago';
 }
 
-// Core sync function — pushes DB to GitHub as JSON
-async function syncToGitHub(silent) {
-  if(!GH.token || !GH.repo || !GH.path) {
-    if(!silent) notify('⚙️ Set up GitHub sync in Settings first');
-    return;
-  }
-
-  updateSyncUI('syncing');
-
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(DB, null, 2))));
-  const apiBase = `https://api.github.com/repos/${GH.repo}/contents/${GH.path}`;
-  const headers = {
+function ghHeaders() {
+  return {
     'Authorization': `token ${GH.token}`,
     'Accept': 'application/vnd.github.v3+json',
     'Content-Type': 'application/json',
   };
+}
 
+function apiBase() {
+  return `https://api.github.com/repos/${GH.repo}/contents/${GH.path}`;
+}
+
+// Pull remote data from GitHub — returns { remoteDB, sha } or null
+async function pullFromGitHub() {
   try {
-    // Get current SHA (needed to update existing file)
-    let sha = null;
-    try {
-      const getRes = await fetch(`${apiBase}?ref=${GH.branch || 'main'}`, { headers });
-      if(getRes.ok) {
-        const getData = await getRes.json();
-        sha = getData.sha;
-      }
-    } catch(_) {}
+    const res = await fetch(`${apiBase()}?ref=${GH.branch || 'main'}&t=${Date.now()}`, {
+      headers: ghHeaders()
+    });
+    if(!res.ok) return null;
+    const data = await res.json();
+    const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+    const remoteDB = JSON.parse(decoded);
+    return { remoteDB, sha: data.sha };
+  } catch(e) {
+    return null;
+  }
+}
 
+// Push current DB to GitHub — pass sha if file already exists
+async function pushToGitHub(sha, silent) {
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(DB, null, 2))));
     const body = {
       message: `SpendSense sync — ${new Date().toLocaleString('en-IN')}`,
       content,
@@ -647,34 +646,104 @@ async function syncToGitHub(silent) {
     };
     if(sha) body.sha = sha;
 
-    const putRes = await fetch(apiBase, {
+    const res = await fetch(apiBase(), {
       method: 'PUT',
-      headers,
+      headers: ghHeaders(),
       body: JSON.stringify(body),
     });
 
-    if(putRes.ok) {
+    if(res.ok) {
       addSyncLog(true, 'Synced successfully');
       if(!silent) notify('✅ Synced to GitHub!');
+      return true;
     } else {
-      const err = await putRes.json();
-      const msg = err.message || putRes.statusText;
+      const err = await res.json();
+      const msg = err.message || res.statusText;
       addSyncLog(false, msg);
       if(!silent) notify('❌ Sync failed: ' + msg);
+      return false;
     }
   } catch(e) {
     addSyncLog(false, e.message || 'Network error');
     if(!silent) notify('❌ Sync error: ' + (e.message || 'Network error'));
+    return false;
+  }
+}
+
+// Merge local + remote — deduplicate by transaction ID
+// Remote wins on conflict (same ID, different data) since remote is shared source of truth
+function mergeDBs(localDB, remoteDB) {
+  const merged = { ...localDB };
+  const txnMap = {};
+
+  // Add all local transactions
+  (localDB.txns || []).forEach(t => { txnMap[t.id] = t; });
+
+  // Add/overwrite with remote transactions
+  (remoteDB.txns || []).forEach(t => { txnMap[t.id] = t; });
+
+  merged.txns = Object.values(txnMap).sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+  return merged;
+}
+
+// Full sync: pull → merge → push — called on app open
+async function fullSync(silent) {
+  if(!GH.token || !GH.repo || !GH.path) return;
+
+  updateSyncUI('syncing');
+
+  const pulled = await pullFromGitHub();
+
+  if(pulled) {
+    const { remoteDB, sha } = pulled;
+    const localTxnCount = (DB.txns || []).length;
+    const remoteTxnCount = (remoteDB.txns || []).length;
+
+    // Merge both datasets
+    const mergedDB = mergeDBs(DB, remoteDB);
+    const mergedCount = mergedDB.txns.length;
+
+    // Update local with merged data
+    DB = mergedDB;
+    localStorage.setItem('spendsense_v2', JSON.stringify(DB));
+
+    // Push merged data back to GitHub
+    await pushToGitHub(sha, true);
+
+    if(!silent) {
+      const newTxns = mergedCount - localTxnCount;
+      if(newTxns > 0) {
+        notify(`🔄 Synced — ${newTxns} new transaction${newTxns > 1 ? 's' : ''} pulled`);
+      } else {
+        notify('✅ Already up to date');
+      }
+    }
+  } else {
+    // Nothing on GitHub yet — push local data up
+    await pushToGitHub(null, silent);
   }
 
   updateSyncUI();
+
+  // Re-render current tab with fresh data
+  const activeTab = document.querySelector('.tab.active');
+  const tabIdx = [...document.querySelectorAll('.tab')].indexOf(activeTab);
+  const renderers = [renderHome, renderHistory, renderCats, renderCards, renderSettings];
+  if(renderers[tabIdx]) renderers[tabIdx]();
 }
 
-// Debounced auto-sync after every save
+// Debounced push after every save (no need to pull again, we just saved locally)
 let syncTimer = null;
 function scheduleSync() {
   clearTimeout(syncTimer);
-  syncTimer = setTimeout(() => syncToGitHub(true), 1500);
+  syncTimer = setTimeout(async () => {
+    if(!GH.token || !GH.repo || !GH.path) return;
+    updateSyncUI('syncing');
+    // Get current SHA first so the push doesn't conflict
+    const pulled = await pullFromGitHub();
+    const sha = pulled ? pulled.sha : null;
+    await pushToGitHub(sha, true);
+  }, 1500);
 }
 
 // ─── SAVE DB ──────────────────────────────────────────────────────────────────
@@ -944,7 +1013,7 @@ function saveGitHubSettings() {
 
 async function testSync() {
   saveGitHubSettings();
-  await syncToGitHub(false);
+  await fullSync(false);
   renderSettings();
 }
 
@@ -1393,6 +1462,8 @@ function checkURLParams() {
 updateSyncUI();
 renderHome();
 checkURLParams();
+// On every app open: pull from GitHub, merge with local, push merged back
+fullSync(true);
 </script>
 </body>
 </html>
