@@ -1,4 +1,75 @@
 {
-  "txns": [],
+  "txns": [
+    {
+      "id": "mp12wvz8ltan",
+      "desc": "Cig",
+      "amount": 25,
+      "txn_type": "debit",
+      "method": "upi",
+      "card": "kotak",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "other",
+      "notes": "",
+      "datetime": "2026-05-10T23:48:00.000Z",
+      "date": "2026-05-10"
+    },
+    {
+      "id": "mp12xriu1vcj",
+      "desc": "Petrol",
+      "amount": 836.55,
+      "txn_type": "debit",
+      "method": "credit_card",
+      "card": "axis",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "fuel",
+      "notes": "",
+      "datetime": "2026-05-11T05:18:00.000Z",
+      "date": "2026-05-11"
+    },
+    {
+      "id": "mp12ygkotlmv",
+      "desc": "Dadi recharge",
+      "amount": 421,
+      "txn_type": "debit",
+      "method": "upi",
+      "card": "kotak",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "subscription",
+      "notes": "",
+      "datetime": "2026-05-11T05:19:00.000Z",
+      "date": "2026-05-11"
+    },
+    {
+      "id": "mp17lta6dko9",
+      "desc": "Office",
+      "amount": 50,
+      "txn_type": "debit",
+      "method": "upi",
+      "card": "kotak",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "food",
+      "notes": "",
+      "datetime": "2026-05-11T07:29:00.000Z",
+      "date": "2026-05-11"
+    },
+    {
+      "id": "mp17mmjlurn4",
+      "desc": "Cig",
+      "amount": 25,
+      "txn_type": "debit",
+      "method": "upi",
+      "card": "kotak",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "other",
+      "notes": "",
+      "datetime": "2026-05-11T07:30:00.000Z",
+      "date": "2026-05-11"
+    }
+  ],
   "reset_date": ""
 }
