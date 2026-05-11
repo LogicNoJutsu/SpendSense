@@ -13,6 +13,34 @@
       "notes": "",
       "datetime": "2026-05-11T05:18:00.000Z",
       "date": "2026-05-11"
+    },
+    {
+      "id": "mp12xriu1vcj",
+      "desc": "Petrol",
+      "amount": 836.55,
+      "txn_type": "debit",
+      "method": "credit_card",
+      "card": "axis",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "fuel",
+      "notes": "",
+      "datetime": "2026-05-11T05:18:00.000Z",
+      "date": "2026-05-11"
+    },
+    {
+      "id": "mp12ygkotlmv",
+      "desc": "Dadi recharge",
+      "amount": 421,
+      "txn_type": "debit",
+      "method": "upi",
+      "card": "kotak",
+      "emi": "onetime",
+      "emi_months": "",
+      "category": "subscription",
+      "notes": "",
+      "datetime": "2026-05-11T05:19:00.000Z",
+      "date": "2026-05-11"
     }
   ],
   "reset_date": ""
